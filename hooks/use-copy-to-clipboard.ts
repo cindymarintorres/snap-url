@@ -2,21 +2,24 @@
 
 import { useState, useCallback } from "react";
 
+type CopyState = "idle" | "copied" | "error";
+
 export function useCopyToClipboard(timeout = 2000) {
-  const [copied, setCopied] = useState(false);
+  const [state, setState] = useState<CopyState>("idle");
 
   const copy = useCallback(
     async (text: string) => {
       try {
         await navigator.clipboard.writeText(text);
-        setCopied(true);
-        setTimeout(() => setCopied(false), timeout);
+        setState("copied");
+        setTimeout(() => setState("idle"), timeout);
       } catch {
-        console.error("Failed to copy to clipboard");
+        setState("error");
+        setTimeout(() => setState("idle"), timeout);
       }
     },
-    [timeout],
+    [timeout]
   );
 
-  return { copied, copy };
+  return { copy, state, copied: state === "copied" };
 }

@@ -38,6 +38,18 @@ yarn-error.log*
 
 # typescript
 *.tsbuildinfo
-next-env.d.ts
 
 /app/generated/prisma
+
+#Agentes IA
+.agents/
+.claude/
+.gemini/
+.antigravity/
+AGENTS.md
+CLAUDE.md
+GEMINI.md
+ANTIGRAVITY.md
+Snapurl*.md
+SKILL.md
+task.md
