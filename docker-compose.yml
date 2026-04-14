@@ -6,15 +6,15 @@ services:
     container_name: snapurl_db
     restart: unless-stopped
     environment:
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${DB_USER:-snapurl}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-snapurl_dev}
+      POSTGRES_DB: ${DB_NAME:-snapurl}
     ports:
-      - "5432:5432"
+      - "${DB_PORT:-3002}:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER}"]
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER:-snapurl}"]
       interval: 5s
       timeout: 5s
       retries: 5
@@ -24,8 +24,8 @@ services:
     container_name: snapurl_mail
     restart: unless-stopped
     ports:
-      - "1025:1025"
-      - "8025:8025"
+      - "${MAILPIT_UI_PORT:-3004}:8025" # UI para ver los correos
+      - "${MAILPIT_SMTP_PORT:-3005}:1025" # Puerto SMTP para enviar correos
     environment:
       MP_MAX_MESSAGES: 50
       MP_SMTP_AUTH_ACCEPT_ANY: 1
